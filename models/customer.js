@@ -91,6 +91,22 @@ class Customer {
     }
   }
 
+  static async search(query) {
+    const results = await db.query(
+      `SELECT id,
+              first_name,
+              last_name,
+              phone,
+              notes
+        FROM customers
+        WHERE concat(first_name, ' ', last_name) ILIKE $1
+        ORDER BY last_name, first_name`,
+        [query]
+    );
+
+    return results.rows.map(c => new Customer(c));
+  }
+
   /** Return full name of customer */
 
   get fullName(){
