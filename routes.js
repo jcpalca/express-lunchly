@@ -21,7 +21,7 @@ router.get("/", async function (req, res, next) {
   else {
     customers = await Customer.all();
   }
-  
+
   return res.render("customer_list.html", { customers });
 });
 
