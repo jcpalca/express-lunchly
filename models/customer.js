@@ -91,7 +91,9 @@ class Customer {
     }
   }
 
-  /** TODO: */
+  /** Returns list of customers searched with query string 
+   * Returns [Customer, Customer, ...]
+  */
 
   static async search(query) {
     const results = await db.query(
@@ -109,28 +111,23 @@ class Customer {
     return results.rows.map(c => new Customer(c));
   }
 
-  /** Return list of top 10 customers ordered by list of reservations */
+  /** Return list of top 10 customers ordered by most reservations 
+   * Returns: [Customer, Customer,....]
+  */
 
   static async findTopCustomers(){
-    debugger;
+    //debugger;
     const results = await db.query(
-      // `SELECT c.id,
-      //         c.first_name AS "firstName"
-      //         c.last_name AS "lastName",
-      //         c.phone,
-      //         c.notes
-      //     FROM reservations AS r
-      //       JOIN customers AS c ON c.id = r.customer_id
-      //     GROUP BY c.id
-      //     ORDER BY COUNT(c.id) DESC
-      //     LIMIT 10`
-      `SELECT id,
-                  first_name AS "firstName",
-                  last_name  AS "lastName",
-                  phone,
-                  notes
-           FROM customers
-           ORDER BY last_name, first_name`,
+      `SELECT c.id,
+              c.first_name AS "firstName",
+              c.last_name AS "lastName",
+              c.phone,
+              c.notes
+          FROM reservations AS r
+            JOIN customers AS c ON c.id = r.customer_id
+          GROUP BY c.id
+          ORDER BY COUNT(c.id) DESC
+          LIMIT 10`
     );
     
     return results.rows.map(c => new Customer(c));
@@ -147,6 +144,3 @@ class Customer {
 
 module.exports = Customer;
 
-  // getFormattedStartAt() {
-  //   return moment(this.startAt).format("MMMM Do YYYY, h:mm a");
-  // }

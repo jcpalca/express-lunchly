@@ -10,8 +10,7 @@ const Reservation = require("./models/reservation");
 
 const router = new express.Router();
 
-/** Homepage: show list of customers. */
-/** TODO: added docstring for new route handling search */
+/** Homepage: show list of customers or show list of searched customers */
 
 router.get("/", async function (req, res, next) {
   let customers;
@@ -43,6 +42,13 @@ router.post("/add/", async function (req, res, next) {
   await customer.save();
 
   return res.redirect(`/${customer.id}/`);
+});
+
+/** Show list of top 10 customers by reservations */
+
+router.get("/top-ten/", async function(req, res, next){
+  const customers = await Customer.findTopCustomers();
+  return res.render("customer_list.html", { customers });
 });
 
 /** Show a customer, given their ID. */
@@ -78,15 +84,6 @@ router.post("/:id/edit/", async function (req, res, next) {
 
   return res.redirect(`/${customer.id}/`);
 });
-
-/** Show list of top 10 customers by reservations */
-
-router.get("/top-ten/", async function(req, res, next){
-  // debugger;
-
-  const customers = await Customer.all();
-  return res.render("customer_list.html", { customers });
-})
 
 /** Handle adding a new reservation. */
 
