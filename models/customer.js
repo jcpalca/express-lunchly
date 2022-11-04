@@ -91,6 +91,8 @@ class Customer {
     }
   }
 
+  /** TODO: */
+
   static async search(query) {
     const results = await db.query(
       `SELECT id,
@@ -104,6 +106,33 @@ class Customer {
         [`%${query}%`]
     );
 
+    return results.rows.map(c => new Customer(c));
+  }
+
+  /** Return list of top 10 customers ordered by list of reservations */
+
+  static async findTopCustomers(){
+    debugger;
+    const results = await db.query(
+      // `SELECT c.id,
+      //         c.first_name AS "firstName"
+      //         c.last_name AS "lastName",
+      //         c.phone,
+      //         c.notes
+      //     FROM reservations AS r
+      //       JOIN customers AS c ON c.id = r.customer_id
+      //     GROUP BY c.id
+      //     ORDER BY COUNT(c.id) DESC
+      //     LIMIT 10`
+      `SELECT id,
+                  first_name AS "firstName",
+                  last_name  AS "lastName",
+                  phone,
+                  notes
+           FROM customers
+           ORDER BY last_name, first_name`,
+    );
+    
     return results.rows.map(c => new Customer(c));
   }
 
