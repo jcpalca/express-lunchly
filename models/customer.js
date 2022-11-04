@@ -94,14 +94,14 @@ class Customer {
   static async search(query) {
     const results = await db.query(
       `SELECT id,
-              first_name,
-              last_name,
+              first_name AS "firstName",
+              last_name AS "lastName",
               phone,
               notes
         FROM customers
         WHERE concat(first_name, ' ', last_name) ILIKE $1
         ORDER BY last_name, first_name`,
-        [query]
+        [`%${query}%`]
     );
 
     return results.rows.map(c => new Customer(c));
