@@ -90,6 +90,18 @@ class Customer {
       );
     }
   }
+
+  /** Return full name of customer */
+
+  get fullName(){
+    const fullName = `${this.firstName} ${this.lastName}`;
+    return fullName;
+  }
+
 }
 
 module.exports = Customer;
+
+  // getFormattedStartAt() {
+  //   return moment(this.startAt).format("MMMM Do YYYY, h:mm a");
+  // }
