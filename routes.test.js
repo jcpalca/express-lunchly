@@ -81,3 +81,51 @@ describe("POST /add", function() {
     expect(resp.status).toEqual(302);
   });
 });
+
+describe("GET /top-ten", function() {
+  it("displays top ten customer list", async function() {
+    const resp = await request(app).get("/top-ten");
+
+    expect(resp.status).toEqual(200);
+    expect(resp.text).toContain("Ezra Chung");
+    expect(resp.text).toContain("Joel Alcaraz");
+  });
+});
+
+// ################ RESERVATIONS TESTS ############################ //
+
+describe("POST /:id/add-reservation/", function() {
+  it("adds a new reservation", async function () {
+    let result = await db.query(
+      `SELECT * FROM reservations WHERE customer_id = 2`
+    );
+    expect(result.rows.length).toEqual(1);
+
+    const newReservation = {
+      customerId: 2,
+      numGuests: 7,
+      startAt: "2022-11-02 11:13 am",
+      notes: "test reservation"
+    }
+
+    const resp = await request(app)
+      .post("/2/add-reservation")
+      .type("form")
+      .send(newReservation);
+
+    result = await db.query(
+      `SELECT * FROM reservations WHERE customer_id = 2`
+    );
+
+    expect(result.rows.length).toEqual(2);
+    expect(result.rows[1]).toEqual({
+      id: expect.any(Number),
+      num_guests:7,
+      customer_id:2,
+      start_at: expect.any(Date),
+      notes: "test reservation"
+    })
+    expect(resp.status).toEqual(302);
+
+  });
+});
